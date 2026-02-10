@@ -9,6 +9,7 @@ from .resource_type import ResourceType
 class IdService[Protocol]:
     logger = logging.getLogger()
     exclude_fields: dict[ResourceType, list[str]]
+    field_blocklist: list[str]
 
     def __init__(self):
         logging.basicConfig(level=logging.INFO)
@@ -26,14 +27,24 @@ class IdService[Protocol]:
         
         returns a deepcopied version of data with the specified paths excluded.
         """
+        copied = deepcopy(data)
         pass
 
 
 class IdServiceMd5:
+    exclude_fields = {
+        ResourceType.PERSON: ["metadata.lastVerifiedDate"],
+        ResourceType.THING: ["metadata.observedDate"],
+        ResourceType.PLACE: ["metadata.lastVerifiedDate"]
+    }
+    field_blocklist: list[str] = ["timestamp"]
+
     def generate_id(self, data: dict, resource_type: ResourceType) -> str:
-        pass
+        fields_to_exclude = self.field_blocklist
+        fields_to_exclude.extend(self.exclude_fields.get(resource_type, []))
 
 
 class IdServiceSha256:
     def generate_id(self, data: dict, resource_type: ResourceType) -> str:
-        pass
+        fields_to_exclude = self.field_blocklist
+        fields_to_exclude.extend(self.exclude_fields.get(resource_type, []))
