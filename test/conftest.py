@@ -17,6 +17,12 @@ def people() -> list[dict]:
         {"id": 1, "first_name": "Liam", "last_name": "Earley", "timestamp": str(time()), "metadata": {"lastVerifiedDate": "2026-02-14"}}
     ]
 
+@pytest.fixture
+def new_people():
+    return [
+        {"id": 1, "first_name": "Test", "last_name": "Earley", "timestamp": str(time()), "metadata": {"lastVerifiedDate": "2026-02-13"}},
+        {"id": 1, "first_name": "Test2", "last_name": "Earley", "timestamp": str(time()), "metadata": {"lastVerifiedDate": "2026-02-14"}}
+    ]
 
 @pytest.fixture
 def data_store(people) -> MockDataStore:
