@@ -3,13 +3,12 @@ from copy import deepcopy
 from hashlib import md5, sha256
 import logging
 
-
-
+from .resource_type import ResourceType
 
 
 class IdService[Protocol]:
     logger = logging.getLogger()
-    exclude_fields: dict[str, list[str]]
+    exclude_fields: dict[ResourceType, list[str]]
 
     def __init__(self):
         logging.basicConfig(level=logging.INFO)
@@ -29,11 +28,12 @@ class IdService[Protocol]:
         """
         pass
 
+
 class IdServiceMd5:
-    def generate_id(self, data: dict, resource_type: str) -> str:
+    def generate_id(self, data: dict, resource_type: ResourceType) -> str:
         pass
 
 
 class IdServiceSha256:
-    def generate_id(self, data: dict, resource_type: str) -> str:
+    def generate_id(self, data: dict, resource_type: ResourceType) -> str:
         pass
