@@ -6,7 +6,7 @@ import logging
 from .resource_type import ResourceType
 
 
-class IdService[Protocol]:
+class IdService(Protocol):
     logger = logging.getLogger()
     exclude_fields: dict[ResourceType, list[str]]
     field_blocklist: list[str]

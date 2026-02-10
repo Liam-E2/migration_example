@@ -1,9 +1,11 @@
 from dataclasses import dataclass
+from src.id_service.resource_type import ResourceType
+
 
 @dataclass
 class Entry:
     record_id: str
-    record_type: str
+    record_type: ResourceType
 
 
 class MockDataStore:
@@ -15,5 +17,5 @@ class MockDataStore:
         self.entries[id] = entry
 
 
-    def get_entry(self, id: str, entry: Entry) -> Entry | None:
+    def get_entry(self, id: str) -> Entry | None:
         return self.entries.get(id)

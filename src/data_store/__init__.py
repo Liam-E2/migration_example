@@ -1,1 +1,1 @@
-from data_store.data_store import MockDataStore, Entry
+from src.data_store.data_store import MockDataStore, Entry
