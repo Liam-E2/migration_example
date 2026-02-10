@@ -1,6 +1,7 @@
 from typing import Protocol
 from copy import deepcopy
 from hashlib import md5, sha256
+import json
 import logging
 
 from .resource_type import ResourceType
@@ -54,8 +55,14 @@ class IdServiceMd5:
         fields_to_exclude = self.field_blocklist
         fields_to_exclude.extend(self.exclude_fields.get(resource_type, []))
 
+        filtered_data = json.dumps(self.exclude_fields(data, fields_to_exclude))
+        return md5(filtered_data)
+
 
 class IdServiceSha256:
     def generate_id(self, data: dict, resource_type: ResourceType) -> str:
         fields_to_exclude = self.field_blocklist
         fields_to_exclude.extend(self.exclude_fields.get(resource_type, []))
+        
+        filtered_data = json.dumps(self.exclude_fields(data, fields_to_exclude))
+        return md5(filtered_data)
