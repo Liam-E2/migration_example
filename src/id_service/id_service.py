@@ -28,7 +28,18 @@ class IdService(Protocol):
         returns a deepcopied version of data with the specified paths excluded.
         """
         copied = deepcopy(data)
-        pass
+        for field in exclude_fields:
+            if "." not in field:
+                copied.pop(field, None)
+                continue
+            
+            split_path = field.split(".")
+            sub_dict = copied
+            for key in split_path[:-1]:
+                sub_dict = sub_dict[key]
+            sub_dict.pop(split_path[-1], None)
+
+        return copied
 
 
 class IdServiceMd5:
