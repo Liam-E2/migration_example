@@ -3,6 +3,10 @@ from src.migration import migrate_id_services
 
 
 def test_migration(people, data_store, new_people):
+    """
+    Given the pre-populated data-store, replay 'person' data using migrate_id_services,
+    demonstrating that ids have been migrated.
+    """
     new_service = IdServiceSha256()
     old_service = IdServiceMd5()
 
