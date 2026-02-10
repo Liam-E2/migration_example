@@ -49,7 +49,7 @@ class IdServiceMd5:
         ResourceType.THING: ["metadata.observedDate"],
         ResourceType.PLACE: ["metadata.lastVerifiedDate"]
     }
-    field_blocklist: list[str] = ["timestamp"]
+    field_blocklist: list[str] = ["timestamp", "id"]
 
     def generate_id(self, data: dict, resource_type: ResourceType) -> str:
         fields_to_exclude = self.field_blocklist
@@ -60,6 +60,9 @@ class IdServiceMd5:
 
 
 class IdServiceSha256:
+    exclude_fields = {ResourceType.PERSON: ["metadata.lastVerifiedDate"]}
+    field_blocklist: list[str] = ["timestamp", "id"]
+
     def generate_id(self, data: dict, resource_type: ResourceType) -> str:
         fields_to_exclude = self.field_blocklist
         fields_to_exclude.extend(self.exclude_fields.get(resource_type, []))
