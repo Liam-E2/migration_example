@@ -1,4 +1,4 @@
-from src.id_service import IdService
+from src.id_service import IdService, IdServiceMd5, ResourceType
 
 
 def test_exclude_fields():
@@ -17,3 +17,9 @@ def test_exclude_fields():
     }
 
     assert expected == IdService.exclude_fields(data, exclude_fields)
+
+
+def test_initial_population(data_store, people):
+    service = IdServiceMd5()
+    for person in people:
+        assert data_store.get_entry(service.generate_id(person, ResourceType.PERSON)) is not None

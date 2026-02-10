@@ -1,6 +1,7 @@
 from typing import Protocol
 from copy import deepcopy
 from hashlib import md5, sha256
+import base64
 import json
 import logging
 
@@ -9,7 +10,7 @@ from .resource_type import ResourceType
 
 class IdService(Protocol):
     logger = logging.getLogger()
-    exclude_fields: dict[ResourceType, list[str]]
+    fields_to_exclude: dict[ResourceType, list[str]]
     field_blocklist: list[str]
 
     def __init__(self):
@@ -43,8 +44,8 @@ class IdService(Protocol):
         return copied
 
 
-class IdServiceMd5:
-    exclude_fields = {
+class IdServiceMd5(IdService):
+    fields_to_exclude = {
         ResourceType.PERSON: ["metadata.lastVerifiedDate"],
         ResourceType.THING: ["metadata.observedDate"],
         ResourceType.PLACE: ["metadata.lastVerifiedDate"]
@@ -52,20 +53,22 @@ class IdServiceMd5:
     field_blocklist: list[str] = ["timestamp", "id"]
 
     def generate_id(self, data: dict, resource_type: ResourceType) -> str:
-        fields_to_exclude = self.field_blocklist
-        fields_to_exclude.extend(self.exclude_fields.get(resource_type, []))
+        all_fields_to_exclude = self.field_blocklist
+        all_fields_to_exclude.extend(self.fields_to_exclude.get(resource_type, []))
 
-        filtered_data = json.dumps(self.exclude_fields(data, fields_to_exclude))
-        return md5(filtered_data)
+        filtered_data = json.dumps(self.exclude_fields(data, all_fields_to_exclude), sort_keys=True)
+        return base64.b64encode(md5(filtered_data.encode()).digest())
 
 
-class IdServiceSha256:
-    exclude_fields = {ResourceType.PERSON: ["metadata.lastVerifiedDate"]}
+class IdServiceSha256(IdService):
+    fields_to_exclude = {
+        ResourceType.PERSON: ["metadata.lastVerifiedDate"]
+        }
     field_blocklist: list[str] = ["timestamp", "id"]
 
     def generate_id(self, data: dict, resource_type: ResourceType) -> str:
-        fields_to_exclude = self.field_blocklist
-        fields_to_exclude.extend(self.exclude_fields.get(resource_type, []))
-        
-        filtered_data = json.dumps(self.exclude_fields(data, fields_to_exclude))
-        return md5(filtered_data)
+        all_fields_to_exclude = self.field_blocklist
+        all_fields_to_exclude.extend(self.fields_to_exclude.get(resource_type, []))
+
+        filtered_data = json.dumps(self.exclude_fields(data, all_fields_to_exclude), sort_keys=True)
+        return base64.b64encode(sha256(filtered_data.encode()).digest())

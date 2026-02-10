@@ -21,10 +21,12 @@ def people():
 @pytest.fixture
 def data_store(people):
     mock_store = MockDataStore()
-    mock_store.put_entry()
     id_service = IdServiceMd5()
 
     for person in people:
-        mock_store.put_entry(id_service.generate_id(person), Entry(record_type=ResourceType.PERSON, record_id=person.get('id')))
+        mock_store.put_entry(
+            id_service.generate_id(person, ResourceType.PERSON), 
+            Entry(record_type=ResourceType.PERSON, record_id=person.get('id'))
+            )
 
     return mock_store
