@@ -19,3 +19,7 @@ class MockDataStore:
 
     def get_entry(self, id: str) -> Entry | None:
         return self.entries.get(id)
+    
+
+    def pop_entry(self, id: str) -> Entry | None:
+        return self.entries.pop(id, None)

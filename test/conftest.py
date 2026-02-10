@@ -6,7 +6,7 @@ from src.id_service import ResourceType, IdServiceMd5
 
 
 @pytest.fixture
-def people():
+def people() -> list[dict]:
     # Similar, but different - here, id doesn't work because the same ID points to 5 'different people'
     # Looking to use an ID based on meaningful attributes instead
     return [
@@ -19,7 +19,7 @@ def people():
 
 
 @pytest.fixture
-def data_store(people):
+def data_store(people) -> MockDataStore:
     mock_store = MockDataStore()
     id_service = IdServiceMd5()
 
