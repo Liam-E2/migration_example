@@ -9,7 +9,7 @@ from .resource_type import ResourceType
 
 
 class IdService(Protocol):
-    logger = logging.getLogger()
+    logger: logging.Logger = logging.getLogger()
     fields_to_exclude: dict[ResourceType, list[str]]
     field_blocklist: list[str]
 
@@ -17,7 +17,7 @@ class IdService(Protocol):
         logging.basicConfig(level=logging.INFO)
 
 
-    def generate_id(self, data: dict, **kwargs) -> str:
+    def generate_id(self, data: dict, resource_type: ResourceType) -> str:
         pass
 
 
@@ -57,7 +57,7 @@ class IdServiceMd5(IdService):
         all_fields_to_exclude.extend(self.fields_to_exclude.get(resource_type, []))
 
         filtered_data = json.dumps(self.exclude_fields(data, all_fields_to_exclude), sort_keys=True)
-        return base64.b64encode(md5(filtered_data.encode()).digest())
+        return base64.b64encode(md5(filtered_data.encode()).digest()).decode()
 
 
 class IdServiceSha256(IdService):
@@ -71,4 +71,4 @@ class IdServiceSha256(IdService):
         all_fields_to_exclude.extend(self.fields_to_exclude.get(resource_type, []))
 
         filtered_data = json.dumps(self.exclude_fields(data, all_fields_to_exclude), sort_keys=True)
-        return base64.b64encode(sha256(filtered_data.encode()).digest())
+        return base64.b64encode(sha256(filtered_data.encode()).digest()).decode()

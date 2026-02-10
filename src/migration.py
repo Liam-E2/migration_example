@@ -11,7 +11,7 @@ def migrate_id_services(data: dict, resource_type: ResourceType, old_service: Id
 
     if data_store.get_entry(old_id) is not None:
         # ordering - don't delete until successful write. Should be all in one transaction
-        data_store.put_entry(new_id, Entry(data.get("id"), resource_type))
+        data_store.put_entry(new_id, Entry(data.get("id", ""), resource_type))
         data_store.pop_entry(old_id)
     else:
-        data_store.put_entry(new_id, Entry(data.get("id"), resource_type))
+        data_store.put_entry(new_id, Entry(data.get("id", ""), resource_type))
